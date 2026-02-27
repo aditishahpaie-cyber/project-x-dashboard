@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nyxora Dashboard - Revamped by Zara</title>
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #1a0a23;
+            --accent: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --glow: rgba(102, 126, 234, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            perspective: 1000px;
+            height: 100vh;
+        }
+
+        /* Animated Gradient Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--bg-secondary), #2a1a3e, var(--bg-primary), #1a0a23);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            z-index: -2;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 3D Bubbles */
+        .bubbles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            animation: float 20s infinite linear;
+        }
+
+        .bubble:nth-child(1) { width: 80px; height: 80px; left: 10%; animation-delay: 0s; animation-duration: 25s; }
+        .bubble:nth-child(2) { width: 120px; height: 120px; left: 20%; animation-delay: -5s; animation-duration: 30s; }
+        .bubble:nth-child(3) { width: 60px; height: 60px; left: 80%; animation-delay: -10s; animation-duration: 20s; }
+        .bubble:nth-child(4) { width: 100px; height: 100px; left: 90%; animation-delay: -15s; animation-duration: 35s; }
+        .bubble:nth-child(5) { width: 140px; height: 140px; left: 50%; animation-delay: -20s; animation-duration: 28s; }
+        .bubble::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2), transparent);
+            transform: translateZ(10px);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        /* Main Scene */
+        .scene {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            height: 100vh;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Office Space */
+        .office {
+            width: 60vw;
+            height: 40vh;
+            margin: 20px 0;
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .table {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border-radius: 50% 50% 50% 0;
+            transform: translate(-50%, -50%) rotateX(10deg) rotateY(5deg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 0 50px rgba(255,255,255,0.1);
+            border: 2px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+        }
+
+        /* Avatars */
+        .avatars {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            height: 400px;
+            transform: translate(-50%, -50%);
+        }
+
+        .avatar {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102,126,234,0.4);
+            transform: translateZ(20px);
+        }
+
+        .avatar:hover {
+            transform: translateZ(40px) scale(1.2);
+            box-shadow: 0 20px 50px rgba(102,126,234,0.6);
+        }
+
+        /* Positions around table */
+        .avatar:nth-child(1) { top: 10%; left: 20%; }
+        .avatar:nth-child(2) { top: 10%; right: 20%; }
+        .avatar:nth-child(3) { bottom: 10%; left: 20%; }
+        .avatar:nth-child(4) { bottom: 10%; right: 20%; }
+        .avatar:nth-child(5) { top: 45%; left: 5%; }
+        .avatar:nth-child(6) { top: 45%; right: 5%; }
+
+        /* Connections */
+        .connections {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .connection {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--glow), transparent);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: fixed;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 16px;
+            max-width: 300px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            z-index: 100;
+            display: none;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Forum */
+        .forum {
+            width: 90vw;
+            max-width: 800px;
+            margin: 20px 0;
+            padding: 30px;
+            border-radius: 20px;
+        }
+
+        .forum h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            background: var(--accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .posts {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .post {
+            background: var(--glass-bg);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .post-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .post-form input {
+            flex: 1;
+            padding: 12px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-primary);
+        }
+
+        .post-form button {
+            padding: 12px 20px;
+            background: var(--accent);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .post-form button:hover {
+            opacity: 0.9;
+        }
+
+        /* Kanban */
+        .kanban {
+            display: flex;
+            gap: 20px;
+            width: 90vw;
+            max-width: 1200px;
+            overflow-x: auto;
+            padding: 20px 0;
+        }
+
+        .column {
+            flex: 1;
+            min-width: 300px;
+            background: var(--glass-bg);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .column h3 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .cards {
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.08);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            cursor: grab;
+            transition: all 0.3s ease;
+        }
+
+        .card:active {
+            cursor: grabbing;
+        }
+
+        .card:hover {
+            background: rgba(255,255,255,0.12);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .office { width: 90vw; height: 30vh; }
+            .kanban { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bubbles">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+
+    <div class="scene">
+        <div class="office">
+            <div class="table"></div>
+            <div class="avatars">
+                <div class="avatar" data-summary="Zara: Head of Design" data-task="Revamp dashboard aesthetics" data-thoughts="Glassmorphism elevates luxury feel.">Z</div>
+                <div class="avatar" data-summary="Argus: Chief-of-Staff" data-task="Review deployment" data-thoughts="Systems alignment critical.">A</div>
+                <div class="avatar" data-summary="DevOps Lead" data-task="Pipeline optimization" data-thoughts="Kanban reflects real-time status.">D</div>
+                <div class="avatar" data-summary="Idea Forum Moderator" data-task="Curate discussions" data-thoughts="Harmony through collaboration.">I</div>
+                <div class="avatar" data-summary="Agent Coordinator" data-task="Avatar connections" data-thoughts="Visualize synergy.">C</div>
+                <div class="avatar" data-summary="Nyxora Core" data-task="Maintain harmony" data-thoughts="Dark luxury aesthetic achieved.">N</div>
+            </div>
+            <svg class="connections" viewBox="0 0 400 400">
+                <!-- Mock connections between avatars -->
+                <path class="connection" d="M 80 80 Q 200 200 320 80" stroke="url(#glowGrad)" stroke-width="2" fill="none" opacity="0.5">
+                    <animate attributeName="opacity" values="0.3;1;0.3" dur="3s" repeatCount="indefinite"/>
+                </path>
+                <path class="connection" d="M 80 320 Q 200 200 320 320" stroke="url(#glowGrad)" stroke-width="2" fill="none" opacity="0.5">
+                    <animate attributeName="opacity" values="0.3;1;0.3" dur="4s" repeatCount="indefinite"/>
+                </path>
+                <!-- Add more as needed -->
+                <defs>
+                    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="rgba(102,126,234,0.3)"/>
+                        <stop offset="50%" stop-color="rgba(118,75,162,0.6)"/>
+                        <stop offset="100%" stop-color="rgba(102,126,234,0.3)"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div>
+
+        <div class="forum">
+            <h2>💡 Ideas Forum</h2>
+            <div class="posts">
+                <div class="post">
+                    <strong>Zara:</strong> Integrate more 3D elements for immersion?
+                </div>
+                <div class="post">
+                    <strong>Argus:</strong> Prioritize mobile responsiveness first.
+                </div>
+            </div>
+            <form class="post-form">
+                <input type="text" id="newPost" placeholder="Share your idea...">
+                <button type="submit">Post</button>
+            </form>
+        </div>
+
+        <div class="kanban">
+            <div class="column" data-status="todo">
+                <h3>To Do</h3>
+                <div class="cards">
+                    <div class="card" draggable="true">Setup CI/CD Pipeline</div>
+                    <div class="card" draggable="true">Review PRs</div>
+                </div>
+            </div>
+            <div class="column" data-status="in-progress">
+                <h3>In Progress</h3>
+                <div class="cards">
+                    <div class="card" draggable="true">Dashboard Revamp</div>
+                </div>
+            </div>
+            <div class="column" data-status="done">
+                <h3>Done</h3>
+                <div class="cards">
+                    <div class="card" draggable="true">Deploy to GH Pages</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        // Avatar Hover
+        const avatars = document.querySelectorAll('.avatar');
+        const tooltip = document.getElementById('tooltip');
+
+        avatars.forEach(avatar => {
+            avatar.addEventListener('mouseenter', (e) => {
+                const rect = avatar.getBoundingClientRect();
+                tooltip.innerHTML = `
+                    <strong>${avatar.dataset.summary}</strong><br>
+                    <em>Task:</em> ${avatar.dataset.task}<br>
+                    <em>Thoughts:</em> ${avatar.dataset.thoughts}
+                `;
+                tooltip.style.display = 'block';
+                tooltip.style.left = (rect.left + rect.width / 2 - 150) + 'px';
+                tooltip.style.top = (rect.bottom + 10) + 'px';
+            });
+
+            avatar.addEventListener('mouseleave', () => {
+                tooltip.style.display = 'none';
+            });
+        });
+
+        // Forum Posts
+        const postForm = document.querySelector('.post-form');
+        const posts = document.querySelector('.posts');
+        postForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const input = document.getElementById('newPost');
+            if (input.value.trim()) {
+                const post = document.createElement('div');
+                post.className = 'post';
+                post.innerHTML = `<strong>Zara:</strong> ${input.value}`;
+                posts.insertBefore(post, posts.firstChild);
+                input.value = '';
+            }
+        });
+
+        // Kanban Drag & Drop
+        const columns = document.querySelectorAll('.column');
+        columns.forEach(column => {
+            column.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+
+            column.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const card = document.querySelector('.dragging');
+                if (card) {
+                    column.querySelector('.cards').appendChild(card);
+                }
+            });
+        });
+
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('dragstart', () => {
+                card.classList.add('dragging');
+            });
+            card.addEventListener('dragend', () => {
+                card.classList.remove('dragging');
+            });
+        });
+
+        // Hide tooltip on outside click
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.avatar')) {
+                tooltip.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
